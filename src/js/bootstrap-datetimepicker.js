@@ -138,15 +138,16 @@
             },
 
             getMoment = function (d) {
-                var returnMoment;
+                var returnMoment,
+                    momentFormats = (d instanceof Date) ? null : parseFormats;
 
                 if (d === undefined || d === null) {
                     returnMoment = moment(); //TODO should this use format? and locale?
                 } else if (hasTimeZone()) { // There is a string to parse and a default time zone
                     // parse with the tz function which takes a default time zone if it is not in the format string
-                    returnMoment = moment.tz(d, parseFormats, options.useStrict, options.timeZone);
+                    returnMoment = moment.tz(d, momentFormats, options.useStrict, options.timeZone);
                 } else {
-                    returnMoment = moment(d, parseFormats, options.useStrict);
+                    returnMoment = moment(d, momentFormats, options.useStrict);
                 }
 
                 if (hasTimeZone()) {
@@ -451,12 +452,12 @@
 
                 // Left and right logic
                 if (horizontal === 'auto') {
-                   if (options.widgetPositioning.avoidRightOverlap &&
+                    if (options.widgetPositioning.avoidRightOverlap &&
                         anchorOffset.left + widget.outerWidth() > $(window).width()) {
                         horizontal = 'right';
-                    //if more than half widget is overflowing the right boundary of parent
-                    // and any of the widget is truncated by the window
                     } else if (parent.width() < anchorOffset.left + widget.outerWidth() / 2 &&
+                        //if more than half widget is overflowing the right boundary of parent
+                        // and any of the widget is truncated by the window
                         anchorOffset.left + widget.outerWidth() > $(window).width()) {
                         horizontal = 'right';
                     } else {
@@ -486,12 +487,12 @@
                 } else {
                     //Parent used only to parent widget in DOM, position relative to anchor === element
                     parentOffset = parent.offset();
-                widget.css({
+                    widget.css({
                         top: vertical === 'top' ? 'auto' : anchorOffset.top - parentOffset.top + element.outerHeight(),
                         bottom: vertical === 'top' ? parent.outerHeight() - (anchorOffset.top - parentOffset.top) : 'auto',
                         left: horizontal === 'left' ? anchorOffset.left - parentOffset.left : 'auto',
                         right: horizontal === 'left' ? 'auto' : parent.outerWidth() - (anchorOffset.left - parentOffset.left) - element.outerWidth()
-                });
+                    });
                 }
             },
 
